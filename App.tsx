@@ -5,114 +5,81 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LoginScreen from "./src/components/LoginScreen";
+import React, { useEffect, useState } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ProfileScreen from './src/components/ProfileScreen';
+import Tasks from './src/components/Tasks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export const AuthContext = React.createContext("auth");
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const ASYNC_KEY_USER = "user";
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+export default function App() {
+  const [loggedInUser, setLoggedInUser] = useState(false);
 
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const onLogout = () => {
+    AsyncStorage.removeItem(ASYNC_KEY_USER);
+    setLoggedInUser(false);
   };
 
+  useEffect(() => {
+    AsyncStorage.getItem(ASYNC_KEY_USER).then(asyncStorageRes => {
+      if (asyncStorageRes !== null) {
+        console.log(asyncStorageRes);
+        setLoggedInUser(JSON.parse(asyncStorageRes));
+      }
+  });
+  }, []);
+
+  const saveUserInfo = (user) => {
+    setLoggedInUser(user);
+    AsyncStorage.setItem(ASYNC_KEY_USER, JSON.stringify(user));
+  }
+
+  function HomeScreen() {
+    const Tab = createBottomTabNavigator();
+    return (
+      <Tab.Navigator screenOptions={{ headerTitleAlign: 'center', tabBarActiveBackgroundColor: "maroon", tabBarInactiveBackgroundColor: "#ffffff", tabBarActiveTintColor: "#ffffff", tabBarInactiveTintColor: "maroon"}}>
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Tasks" component={Tasks} />
+      </Tab.Navigator>
+    );
+  }
+
+  const AuthStack = () => {
+    const Stack = createNativeStackNavigator();
+    return (
+      <Stack.Navigator screenOptions={{ headerTitleAlign: 'center'}}>
+        <Stack.Screen name="Login Screen">
+          {(props) => <LoginScreen onLoginComplete={ saveUserInfo } /> }
+        </Stack.Screen>
+      </Stack.Navigator>
+    );
+  }
+
+  const auth = { loggedInUser, onLogout, saveUserInfo };
+  const AppStack = () => {
+    const Stack = createNativeStackNavigator();
+    return (
+      <AuthContext.Provider value={auth}>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Home" >
+            {(props) => <HomeScreen />}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </AuthContext.Provider>
+    );
+  }
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer>
+      {(loggedInUser) ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
-export default App;

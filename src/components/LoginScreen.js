@@ -5,7 +5,7 @@ import getLoggedInUser from "../utils/UserUtils";
 const OTP_INPUT_BOX_COUNT = 6;
 const IS_NUMBER_PATTERN = /^\d+$/;
 
-export default function LoginScreen() {
+export default function LoginScreen({ onLoginComplete }) {
     const [isLoginInvalid, setLoginInvalid] = useState(false);
 
     const numberRefs = [];
@@ -69,7 +69,7 @@ export default function LoginScreen() {
             const loggedInUser = getLoggedInUser(otpValue);
             if (loggedInUser) {
                 setLoginInvalid(false);
-                alert(loggedInUser.firstName + " logged in");
+                onLoginComplete(loggedInUser);
             } else {
                 setLoginInvalid(true);
             }
@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 10
     },
     title: {
-        fontSize: 20
+        fontSize: 20,
+        color: "black"
     },
     otpBoxesContainer: {
         flexDirection: "row",
@@ -110,7 +111,8 @@ const styles = StyleSheet.create({
         height: 50,
         margin: 5,
         width: 50,
-        textAlign: "center"
+        textAlign: "center",
+        color: "black"
     },
     error: {
         color: "red"

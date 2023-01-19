@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { AuthContext } from "../../App";
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { check, PERMISSIONS } from "react-native-permissions";
 
 export default function ProfileScreen() {

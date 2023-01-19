@@ -11,19 +11,27 @@ import LoginScreen from "./src/components/LoginScreen";
 import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileScreen from './src/components/ProfileScreen';
-import Tasks from './src/components/Tasks';
+import SelectTasks from './src/components/SelectTasks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import configureStore from './src/store/configureStore';
+import { Provider } from 'react-redux';
+import SplashScreen from './src/components/SplashScreen';
+import TasksList from './src/components/TasksList';
+import TaskDetail from './src/components/TaskDetail';
 
 export const AuthContext = React.createContext("auth");
 
 const ASYNC_KEY_USER = "user";
+const store = configureStore();
 
 export default function App() {
-  const [loggedInUser, setLoggedInUser] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const Stack = createNativeStackNavigator();
 
   const onLogout = () => {
     AsyncStorage.removeItem(ASYNC_KEY_USER);
-    setLoggedInUser(false);
+    setLoggedInUser(null);
   };
 
   useEffect(() => {
@@ -45,15 +53,24 @@ export default function App() {
     return (
       <Tab.Navigator screenOptions={{ headerTitleAlign: 'center', tabBarActiveBackgroundColor: "maroon", tabBarInactiveBackgroundColor: "#ffffff", tabBarActiveTintColor: "#ffffff", tabBarInactiveTintColor: "maroon"}}>
         <Tab.Screen name="Profile" component={ProfileScreen} />
-        <Tab.Screen name="Tasks" component={Tasks} />
+        <Tab.Screen name="Tasks" component={SelectTasks} />
       </Tab.Navigator>
     );
   }
 
-  const AuthStack = () => {
-    const Stack = createNativeStackNavigator();
+  const SplashStack = () => {
     return (
-      <Stack.Navigator screenOptions={{ headerTitleAlign: 'center'}}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Splash">
+          {(props) => <SplashScreen onLoadingComplete={() => { setDataLoaded(true) } } /> }
+        </Stack.Screen>
+      </Stack.Navigator>
+    );
+  }
+
+  const AuthStack = () => {
+    return (
+      <Stack.Navigator screenOptions={{ headerTitleAlign: 'center' }}>
         <Stack.Screen name="Login Screen">
           {(props) => <LoginScreen onLoginComplete={ saveUserInfo } /> }
         </Stack.Screen>
@@ -63,22 +80,23 @@ export default function App() {
 
   const auth = { loggedInUser, onLogout, saveUserInfo };
   const AppStack = () => {
-    const Stack = createNativeStackNavigator();
     return (
       <AuthContext.Provider value={auth}>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Home" >
-            {(props) => <HomeScreen />}
-          </Stack.Screen>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="TasksList" component={TasksList} />
+          <Stack.Screen name="TaskDetail" component={TaskDetail} />
         </Stack.Navigator>
       </AuthContext.Provider>
     );
   }
 
   return (
-    <NavigationContainer>
-      {(loggedInUser) ? <AppStack /> : <AuthStack />}
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        { (dataLoaded === false)? <SplashStack /> : (loggedInUser === null) ? <AuthStack /> : <AppStack />  }
+      </NavigationContainer>
+    </Provider>
   );
 }
 

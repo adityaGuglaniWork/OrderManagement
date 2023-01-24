@@ -1,19 +1,27 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TASK_PACKING } from "../../constants";
-import { useOrders } from "../service/useOrders";
+import { useTaskManager } from "../service/useTaskManager";
 import { navigation } from 'react-navigation';
 
 export default function TasksList({ route, navigation }) {
     const { params } = route;
-    const [{ orders, packingTasks, deliveryTasks }, {searchOrderHandler}] = useOrders();
+    const [{ orders, packingTasks, deliveryTasks }, {searchOrderHandler}] = useTaskManager();
 
     const tasks = (params.type === TASK_PACKING) ? packingTasks : deliveryTasks;
 
     const Task = ({ task }) => {
         const order = searchOrderHandler(task.orderId);
         const totalPrice = order.products.reduce((total, product) => total = total + Number(product.price), 0);
+
+        const navigateToDetail = () => {
+            navigation.navigate("TaskDetail", {
+                taskId: task.taskId,
+                taskType: task.type
+            });
+        }
+
         return (
-            <TouchableOpacity onPress={() => { navigation.navigate("TaskDetail") }}>
+            <TouchableOpacity onPress={() => {navigateToDetail()}}>
                 <View style={styles.listItem}>
                     <Text style={styles.orderItemText}>Packing Code: <Text style={styles.orderItemValue}>Code value</Text></Text>
                     <Text style={styles.orderItemText}>Invoice no: <Text style={styles.orderItemValue}>Code value</Text></Text>

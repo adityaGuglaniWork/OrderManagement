@@ -1,8 +1,8 @@
-import { faker } from "@faker-js/faker";
-import { act } from "react-test-renderer";
 import { combineReducers } from "redux";
-import { SEED_ORDERS, TASK_DELIVERY, TASK_PACKING, TASK_STATUS_NOT_STARTED } from "../../constants";
-import { Status, Task } from "../utils/TaskUtils";
+import { PACKING_COMPLETE, SEED_ORDERS, TASK_DELIVERY } from "../../constants";
+import { faker } from "@faker-js/faker";
+import { TASK_PACKING, TASK_STATUS_NOT_STARTED } from "../../constants";
+import Task from "../models/Task";
 
 const initialState = {
     tasks: [],
@@ -14,11 +14,20 @@ export default function manageOrders(state = initialState, action) {
         case SEED_ORDERS: {
             const orders = createRandomOrders(action.orderCount);
             const tasks = createTasks(orders);
-
-            console.log(tasks);
             return {
                 orders: orders,
                 tasks: tasks
+            }
+        }
+        case PACKING_COMPLETE: {
+            const order = state.orders.find((order) => { 
+                return order.orderId === action.task.orderId;
+            });
+            
+            const deliveryTask = new Task(order.codes.DL_CODE, TASK_DELIVERY, TASK_STATUS_NOT_STARTED, order.orderId);
+            return {
+                orders: state.orders,
+                tasks: [...state.tasks, deliveryTask]
             }
         }
         default: {
@@ -31,30 +40,17 @@ export const rootReducer = combineReducers({
     manageOrders
 });
 
-function createTasks(orders) {
+export function createTasks(orders) {
     const tasks = [];
     for (let i = 0; i < orders.length; i++) {
-        const productStatusMapping = [];
-
-        for (let j = 0; j < orders[i].products.length; j++) {
-            productStatusMapping.push({
-                productId: orders[i].products[j].productId,
-                status: false
-            });
-        }
-        tasks.push({
-            type: TASK_DELIVERY,
-            status: TASK_STATUS_NOT_STARTED,
-            workerId: null,
-            orderId: orders[i].orderId,
-            productStatusMapping: productStatusMapping
-        });
+        const newTask = new Task(orders[i].codes.PCK_CODE, TASK_PACKING, TASK_STATUS_NOT_STARTED, orders[i].orderId);
+        tasks.push(newTask);
     }
     return tasks;
 }
   
 
-function createRandomOrders(count) {
+export function createRandomOrders(count) {
     console.log("Generating orders");
 
     const orders = [];
@@ -74,7 +70,7 @@ function createRandomOrders(count) {
         });
     }
 
-    return orders
+    return orders;
 }
 
 function createRandomUser() {
@@ -113,8 +109,8 @@ function generateCodes() {
     const sampleCodes = [2341, 1345, 1242, 1425];
     const index = Math.floor(Math.random() * 4);
     return {
-        IN_CODE: sampleCodes[index],
-        PCK_CODE: sampleCodes[index],
-        DL_CODE: sampleCodes[index]
+        IN_CODE: "IN_CODE_" + sampleCodes[index],
+        PCK_CODE: "PCK_" + sampleCodes[index],
+        DL_CODE: "DL_" + sampleCodes[index]
     }
 }

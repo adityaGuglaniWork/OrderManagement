@@ -1,18 +1,18 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { navigation } from 'react-navigation';
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TASK_DELIVERY, TASK_PACKING } from "../../constants";
 
 export default function SelectTasks({ navigation }) {
-    const showTask = (taskType) => {
+    function showTask(taskType) {
         navigation.navigate("TasksList", { type: taskType });
     }
+
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.tasksContainer} onPress={async () => { showTask(TASK_PACKING)} }>
+            <TouchableOpacity style={styles.tasksContainer} onPress={() => { showTask(TASK_PACKING) }}>
                 <Text style={styles.tasks}>PACKING</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.tasksContainer} onPress={async () => { showTask(TASK_DELIVERY)} }>
+            <TouchableOpacity style={styles.tasksContainer} onPress={() => { showTask(TASK_DELIVERY) }}>
                 <Text style={styles.tasks}>DELIVERY</Text>
             </TouchableOpacity>
 

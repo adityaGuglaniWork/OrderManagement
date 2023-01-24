@@ -17,7 +17,9 @@ import configureStore from './src/store/configureStore';
 import { Provider } from 'react-redux';
 import SplashScreen from './src/components/SplashScreen';
 import TasksList from './src/components/TasksList';
-import TaskDetail from './src/components/TaskDetail';
+import { TASK_PACKING } from './constants';
+import PackingTask from './src/components/PackingTask';
+import DeliveryTask from './src/components/DeliveryTask';
 
 export const AuthContext = React.createContext("auth");
 
@@ -85,7 +87,12 @@ export default function App() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="TasksList" component={TasksList} />
-          <Stack.Screen name="TaskDetail" component={TaskDetail} />
+          <Stack.Screen name="TaskDetail">
+            {({ route, navigation }) => {
+              const taskId = route.params.taskId;
+              return ((route.params.taskType == TASK_PACKING) ? <PackingTask taskId={taskId} navigation={navigation}  />: <DeliveryTask taskId={taskId}/>);
+            }} 
+          </Stack.Screen>
         </Stack.Navigator>
       </AuthContext.Provider>
     );

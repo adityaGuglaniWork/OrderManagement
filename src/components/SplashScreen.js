@@ -1,20 +1,14 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
-import { useOrders } from "../service/useOrders";
+import { useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { useTaskManager } from "../service/useTaskManager";
 
-const ORDER_COUNT = 10;
-
-const NOT_STARTED = "not_started";
-const ONGOING = "ongoin";
-const COMPLETED = "completed"
+const ORDER_COUNT = 3;
 
 export default function SplashScreen({onLoadingComplete}) {
-    const [seeding, setSeeding] = useState(true);
-    const [data, { seedOrdersHandler }] = useOrders();
+    const [data, { seedOrdersHandler }] = useTaskManager();
 
     useEffect(() => {
-        console.log("seeding first time");
-        seedOrdersHandler(10);
+        seedOrdersHandler(ORDER_COUNT);
     }, []);
 
     useEffect(() => {

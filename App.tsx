@@ -54,8 +54,8 @@ export default function App() {
     const Tab = createBottomTabNavigator();
     return (
       <Tab.Navigator screenOptions={{ headerTitleAlign: 'center', tabBarActiveBackgroundColor: "maroon", tabBarInactiveBackgroundColor: "#ffffff", tabBarActiveTintColor: "#ffffff", tabBarInactiveTintColor: "maroon"}}>
-        <Tab.Screen name="Profile" component={ProfileScreen} />
         <Tab.Screen name="Tasks" component={SelectTasks} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     );
   }
@@ -90,7 +90,7 @@ export default function App() {
           <Stack.Screen name="TaskDetail">
             {({ route, navigation }) => {
               const taskId = route.params.taskId;
-              return ((route.params.taskType == TASK_PACKING) ? <PackingTask taskId={taskId} navigation={navigation}  />: <DeliveryTask taskId={taskId}/>);
+              return ((route.params.taskType == TASK_PACKING) ? <PackingTask taskId={taskId} navigation={navigation} /> : <DeliveryTask taskId={taskId} navigation={navigation} />);
             }} 
           </Stack.Screen>
         </Stack.Navigator>

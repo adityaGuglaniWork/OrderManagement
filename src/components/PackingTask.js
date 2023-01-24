@@ -17,6 +17,18 @@ export default function PackingTask({navigation, taskId}) {
         navigation.goBack();
     }
 
+    useEffect(() => {
+        setupHeader(order.orderId);
+    }, []);
+
+    function setupHeader(orderId) {
+        if (orderId) {
+            navigation.setOptions({
+                title: "Order [...." + orderId.substr(orderId.length - 8) + "]"
+            });
+        }
+    }
+
     const productsLeft = productCount - productStateMap.size;
     return (
         <View style={styles.container}>

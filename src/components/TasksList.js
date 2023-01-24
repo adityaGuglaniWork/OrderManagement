@@ -1,13 +1,19 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { TASK_PACKING } from "../../constants";
+import { useContext, useEffect, useState } from "react";
+import { Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { AuthContext } from "../../App";
+import { TASK_PACKING, TASK_STATUS_COMPLETED, TASK_STATUS_STARTED } from "../../constants";
 import { useTaskManager } from "../service/useTaskManager";
-import { navigation } from 'react-navigation';
 
 export default function TasksList({ route, navigation }) {
     const { params } = route;
-    const [{ orders, packingTasks, deliveryTasks }, {searchOrderHandler}] = useTaskManager();
+    const { loggedInUser } = useContext(AuthContext);
+    const [tasks, setTasks] = useState([]);
+    const [{ orders, packingTasks, deliveryTasks }, { searchOrderHandler }] = useTaskManager();
 
-    const tasks = (params.type === TASK_PACKING) ? packingTasks : deliveryTasks;
+    useEffect(() => {
+        const taskList = (params.type === TASK_PACKING) ? packingTasks : deliveryTasks
+        setTasks([...taskList]);
+    }, []);
 
     const Task = ({ task }) => {
         const order = searchOrderHandler(task.orderId);
@@ -20,15 +26,37 @@ export default function TasksList({ route, navigation }) {
             });
         }
 
+        const startOrResumeTask = () => {
+            let message;
+            if (task.workerId) {
+                message = "Task already has a worker, do you want to restart?"
+            } else {
+                message = "Do you want to start the task?";
+            }
+
+            Alert.alert("Task", message, [
+                {
+                    text: "Start",
+                    onPress: () => {
+                        task.workerId = loggedInUser.id;
+                        task.status = TASK_STATUS_STARTED;
+                        navigateToDetail();
+                    }
+                },
+                {
+                    text: "Close"
+                }
+            ])
+        }
+
         return (
-            <TouchableOpacity onPress={() => {navigateToDetail()}}>
+            <TouchableOpacity onPress={() => {startOrResumeTask()}}>
                 <View style={styles.listItem}>
                     <Text style={styles.orderItemText}>Packing Code: <Text style={styles.orderItemValue}>Code value</Text></Text>
                     <Text style={styles.orderItemText}>Invoice no: <Text style={styles.orderItemValue}>Code value</Text></Text>
                     <Text style={styles.orderItemText}>Address: <Text style={styles.orderItemValue}>{order.user.address}</Text></Text>
                     <Text style={styles.orderItemText}>Items Qty: <Text style={styles.orderItemValue}>{order.products.length}</Text></Text>
                     <Text style={styles.orderItemText}>Total Price: <Text style={styles.orderItemValue}>${totalPrice}</Text></Text>
-                    <Text style={styles.orderItemText}>Task Status: <Text style={styles.orderItemValue}>{(task.type === TASK_PACKING)? "Packing" : "Delivery"}</Text></Text>
                 </View>
             </TouchableOpacity>
         );

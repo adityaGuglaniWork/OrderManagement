@@ -20,6 +20,7 @@ import TasksList from './src/components/TasksList';
 import { TASK_PACKING } from './constants';
 import PackingTask from './src/components/PackingTask';
 import DeliveryTask from './src/components/DeliveryTask';
+import { Header } from 'react-native/Libraries/NewAppScreen';
 
 export const AuthContext = React.createContext("auth");
 
@@ -84,8 +85,8 @@ export default function App() {
   const AppStack = () => {
     return (
       <AuthContext.Provider value={auth}>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={HomeScreen} options={{headerShown : false}} />
           <Stack.Screen name="TasksList" component={TasksList} />
           <Stack.Screen name="TaskDetail">
             {({ route, navigation }) => {

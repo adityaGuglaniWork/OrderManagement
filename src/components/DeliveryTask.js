@@ -1,14 +1,31 @@
-import { Alert, Linking, StyleSheet, Text } from "react-native";
+import { Alert, Linking, StyleSheet, Text, View } from "react-native";
 import Geolocation from '@react-native-community/geolocation';
 import { useEffect, useState } from "react";
+import { useTaskManager } from "../service/useTaskManager";
+import { TASK_DELIVERY } from "../../constants";
 
 export default function DeliveryTask({ taskId, navigation }) {
     const [locationSubscriptionId, setLocationSubscriptionId] = useState(null);
+    const [data, { fetchDetailedTask }] = useTaskManager();
     const [position, setPosition] = useState(null);
+    const [task, setTask] = useState(null);
 
     useEffect(() => {
         requestAuthorization();
+
+        const [task, order] = fetchDetailedTask(taskId, TASK_DELIVERY);
+        setTask(task);
+
+        setupHeader(order.orderId);
     }, []);
+
+    function setupHeader(orderId) {
+        if (orderId) {
+            navigation.setOptions({
+                title: "Order [...." + orderId.substr(orderId.length - 8) + "]"
+            });
+        }
+    }
 
     const setLocationWatcher = () => {
         try {
@@ -61,20 +78,26 @@ export default function DeliveryTask({ taskId, navigation }) {
     }
 
     return (
-        <>
-            <Text style={styles.location}>Location</Text>
-            <Text style={styles.locationValue}>{(position === null)? ("Fetching.....") : (`Lat: ${position.lat} Long: ${position.long}`)}</Text>
-        </>
+        <View style={styles.container}>
+            <Text style={styles.header}>Delivery Code</Text>
+            <Text style={styles.value}>{(task !== null)? task.taskId: null}</Text>
+            <Text style={styles.header}>Location</Text>
+            <Text style={styles.value}>{(position === null)? ("Fetching.....") : (`Lat: ${position.lat} Long: ${position.long}`)}</Text>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    location: {
+    container: {
+        margin: 20
+    },
+    header: {
+        marginTop: 20,
         color: "black",
         fontSize: 25
     },
-    locationValue: {
-        color: "darkgrey",
-        fontSize: 15
+    value: {
+        color: "grey",
+        fontSize: 20
     }
 });

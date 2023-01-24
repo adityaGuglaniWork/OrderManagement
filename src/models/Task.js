@@ -4,6 +4,6 @@ export default class Task {
         this.type = type;
         this.status = status;
         this.orderId = orderId;
-        this.workerId = "null";
+        this.workerId = null;
     }
 }

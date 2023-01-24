@@ -51,8 +51,6 @@ export function createTasks(orders) {
   
 
 export function createRandomOrders(count) {
-    console.log("Generating orders");
-
     const orders = [];
 
     for (let i = 0; i < count; i++) {

@@ -21,6 +21,7 @@ import { TASK_PACKING } from './constants';
 import PackingTask from './src/components/PackingTask';
 import DeliveryTask from './src/components/DeliveryTask';
 import { Header } from 'react-native/Libraries/NewAppScreen';
+import ScanningQRScreen from './src/components/ScanningQRScreen';
 
 export const AuthContext = React.createContext("auth");
 
@@ -94,6 +95,7 @@ export default function App() {
               return ((route.params.taskType == TASK_PACKING) ? <PackingTask taskId={taskId} navigation={navigation} /> : <DeliveryTask taskId={taskId} navigation={navigation} />);
             }} 
           </Stack.Screen>
+          <Stack.Screen name="ScanningQRScreen" component={ScanningQRScreen} />
         </Stack.Navigator>
       </AuthContext.Provider>
     );

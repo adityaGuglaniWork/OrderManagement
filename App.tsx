@@ -96,8 +96,7 @@ export default function App() {
               return ((route.params.taskType == TASK_PACKING) ? <PackingTask taskId={taskId} navigation={navigation} /> : <DeliveryTask taskId={taskId} navigation={navigation} />);
             }} 
           </Stack.Screen>
-          <Stack.Screen name="ScanningQRScreen" component={ScanningQRScreen} />
-          <Stack.Screen name="Scan" component={Scan} />
+          <Stack.Screen name="Scan" component={ScanningQRScreen} />
         </Stack.Navigator>
       </AuthContext.Provider>
     );

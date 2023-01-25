@@ -1,4 +1,4 @@
-import { PACKING_COMPLETE, SEED_ORDERS } from "../../constants";
+import { LOGIN_USER, PACKING_COMPLETE, SEED_ORDERS } from "../../constants";
 
 export const seedOrders = (count) => {
     return {

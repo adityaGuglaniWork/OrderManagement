@@ -1,11 +1,12 @@
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import React, { useRef, useState } from "react";
-import getLoggedInUser from "../utils/UserUtils";
+import { useTaskManager } from "../service/useTaskManager";
 
 const OTP_INPUT_BOX_COUNT = 6;
 const IS_NUMBER_PATTERN = /^\d+$/;
 
 export default function LoginScreen({ onLoginComplete }) {
+    const [, { loginUserHandler }] = useTaskManager();
     const [isLoginInvalid, setLoginInvalid] = useState(false);
 
     const numberRefs = [];
@@ -66,7 +67,7 @@ export default function LoginScreen({ onLoginComplete }) {
         });
         
         if (otpValue.length === OTP_INPUT_BOX_COUNT) {
-            const loggedInUser = getLoggedInUser(otpValue);
+            const loggedInUser = loginUserHandler(otpValue);
             if (loggedInUser) {
                 setLoginInvalid(false);
                 onLoginComplete(loggedInUser);

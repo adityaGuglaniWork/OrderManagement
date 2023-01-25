@@ -55,9 +55,9 @@ export default function App() {
   function HomeScreen() {
     const Tab = createBottomTabNavigator();
     return (
-      <Tab.Navigator screenOptions={{ headerTitleAlign: 'center', tabBarActiveBackgroundColor: "maroon", tabBarInactiveBackgroundColor: "#ffffff", tabBarActiveTintColor: "#ffffff", tabBarInactiveTintColor: "maroon"}}>
-        <Tab.Screen name="Tasks" component={SelectTasks} />
+      <Tab.Navigator screenOptions={{ headerTitleAlign: 'center', tabBarActiveBackgroundColor: "maroon", tabBarInactiveBackgroundColor: "#ffffff", tabBarActiveTintColor: "#ffffff", tabBarInactiveTintColor: "maroon" }}>
         <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Tasks" component={SelectTasks} />
       </Tab.Navigator>
     );
   }

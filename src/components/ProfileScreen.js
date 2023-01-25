@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { AuthContext } from "../../App";
 import { launchImageLibrary } from 'react-native-image-picker';
-import { check, PERMISSIONS } from "react-native-permissions";
+import { check, PERMISSIONS, request } from "react-native-permissions";
 
 export default function ProfileScreen() {
   const { loggedInUser, onLogout, saveUserInfo } = useContext(AuthContext);
@@ -10,12 +10,18 @@ export default function ProfileScreen() {
   function requestMediaPermissionAndProceed() {
     const permission = Platform.OS === 'ios' ? PERMISSIONS.IOS.PHOTO_LIBRARY : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
     check(permission).then((status) => { 
+      console.log(status);
       switch (status) {
         case "granted": {
           openGalleryAndSelectImage();
+          break;
         }
         case "denied": {
-          request(permission).then(() => { openGalleryAndSelectImage() });
+          request(permission)
+            .then((status) => {
+              (status === "granted") ? openGalleryAndSelectImage() : showGoToSettingsDialog();
+            });
+          break;
         }
         default: {
           showGoToSettingsDialog();

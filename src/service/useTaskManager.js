@@ -1,12 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import { TASK_PACKING, TASK_STATUS_COMPLETED } from "../../constants";
-import { seedOrders, markPackingTaskComplete } from "./actions";
+import { seedOrders, markPackingTaskComplete, loginUser } from "./actions";
 
 export function useTaskManager() {
     const dispatch = useDispatch();
     const orders = useSelector((state) => {
         return [...state.manageOrders.orders];
     });
+    const users = useSelector((state) => {
+        return [...state.manageOrders.users]
+    })
 
     const packingTasks = [];
     const deliveryTasks = [];
@@ -31,7 +34,13 @@ export function useTaskManager() {
 
     const packingTaskCompleteHander = (task) => {
         dispatch(markPackingTaskComplete(task));
-    } 
+    }
+
+    function loginUserHandler(id) {
+        return users.find((user) => {
+            return user.pin == id
+        });
+    }
 
     const searchOrderHandler = (orderId) => {
         return orders.find((order) => {
@@ -72,7 +81,8 @@ export function useTaskManager() {
         fetchDetailedTask: fetchDetailedTask,
         packingTaskCompleteHander: packingTaskCompleteHander,
         doesTaskExist: doesTaskExist,
-        fetchOrderByInvoice: fetchOrderByInvoice
+        fetchOrderByInvoice: fetchOrderByInvoice,
+        loginUserHandler: loginUserHandler
     }
 
     return [data, handlers];

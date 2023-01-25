@@ -1,5 +1,6 @@
 export const SEED_ORDERS = "seed_orders";
 export const PACKING_COMPLETE = "packing_complete";
+export const LOGIN_USER = "login_user";
 
 
 export const TASK_DELIVERY = "task_delivery";

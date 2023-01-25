@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useTaskManager } from "../service/useTaskManager";
 
-const ORDER_COUNT = 3;
+const ORDER_COUNT = 4;
 
 export default function SplashScreen({onLoadingComplete}) {
     const [data, { seedOrdersHandler }] = useTaskManager();

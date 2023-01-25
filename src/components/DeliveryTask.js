@@ -47,7 +47,6 @@ export default function DeliveryTask({ taskId, navigation }) {
             );
             setLocationSubscriptionId(watchID);
         } catch (error) {
-            console.log(error);
             Alert.alert('WatcihPosition Error', JSON.stringify(error));
           }
     };

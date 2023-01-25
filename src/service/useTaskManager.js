@@ -49,6 +49,11 @@ export function useTaskManager() {
         return [task, order];
     }
 
+    const doesTaskExist = (taskId, type) => {
+        const tasks = (type === TASK_PACKING) ? packingTasks : deliveryTasks;
+        return tasks.some((task) => task.taskId === taskId );
+    }
+
     const data = {
         orders: orders,
         packingTasks: packingTasks,
@@ -59,7 +64,8 @@ export function useTaskManager() {
         seedOrdersHandler: seedOrdersHandler,
         searchOrderHandler: searchOrderHandler,
         fetchDetailedTask: fetchDetailedTask,
-        packingTaskCompleteHander: packingTaskCompleteHander
+        packingTaskCompleteHander: packingTaskCompleteHander,
+        doesTaskExist: doesTaskExist
     }
 
     return [data, handlers];

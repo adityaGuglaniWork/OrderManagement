@@ -20,9 +20,7 @@ import TasksList from './src/components/TasksList';
 import { TASK_PACKING } from './constants';
 import PackingTask from './src/components/PackingTask';
 import DeliveryTask from './src/components/DeliveryTask';
-import { Header } from 'react-native/Libraries/NewAppScreen';
 import ScanningQRScreen from './src/components/ScanningQRScreen';
-import Scan from './src/components/Scan';
 
 export const AuthContext = React.createContext("auth");
 
@@ -42,7 +40,6 @@ export default function App() {
   useEffect(() => {
     AsyncStorage.getItem(ASYNC_KEY_USER).then(asyncStorageRes => {
       if (asyncStorageRes !== null) {
-        console.log(asyncStorageRes);
         setLoggedInUser(JSON.parse(asyncStorageRes));
       }
   });

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AuthContext } from "../../App";
-import { TASK_PACKING, TASK_STATUS_COMPLETED, TASK_STATUS_STARTED } from "../../constants";
+import { TASK_PACKING, TASK_STATUS_STARTED } from "../../constants";
 import { useTaskManager } from "../service/useTaskManager";
 
 export default function TasksList({ route, navigation }) {

@@ -6,57 +6,23 @@ const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
 
 class Scan extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            scan: false,
-            ScanResult: false,
-            result: null
-        };
-    }
     onSuccess = (e) => {
+        console.log(e);
         const check = e.data.substring(0, 4);
         console.log('scanned data' + check);
-        this.setState({
-            result: e,
-            scan: false,
-            ScanResult: true
-        })
-        if (check === 'http') {
-            // Linking.openURL(e.data).catch(err => console.error('An error occured', err));
-        } else {
-            this.setState({
-                result: e,
-                scan: false,
-                ScanResult: true
-            })
-        }
     }
     render() {
-        const { scan, ScanResult, result } = this.state
         return (
             <View style={styles.scrollViewStyle}>
                 <Fragment>
                         <QRCodeScanner 
                             reactivate={true}
                             showMarker={true}
-                            ref={(node) => { this.scanner = node }}
                             onRead={this.onSuccess}
                             topContent={
                                 <Text style={styles.centerText}>
                                    Please move your camera {"\n"} over the QR Code
                                 </Text>
-                            }
-                            bottomContent={
-                                <View>
-                                    <ImageBackground source={require('../assets/images/sample_user.png')} style={styles.bottomContent}>
-                                        <TouchableOpacity style={styles.buttonScan2} 
-                                            onPress={() => this.scanner.reactivate()} 
-                                            onLongPress={() => this.setState({ scan: false })}>
-                                            <Image source={require('../assets/images/sample_user.png')}></Image>
-                                        </TouchableOpacity>
-                                    </ImageBackground>
-                                </View>
                             }
                         />
                 </Fragment>

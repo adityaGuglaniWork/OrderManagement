@@ -52,7 +52,7 @@ export default function TasksList({ route, navigation }) {
         return (
             <TouchableOpacity onPress={() => {startOrResumeTask()}}>
                 <View style={styles.listItem}>
-                    <Text style={styles.orderItemText}>Packing Code: <Text style={styles.orderItemValue}>Code value</Text></Text>
+                    <Text style={styles.orderItemText}>Task Code: <Text style={styles.orderItemValue}>{ task.taskId }</Text></Text>
                     <Text style={styles.orderItemText}>Invoice no: <Text style={styles.orderItemValue}>Code value</Text></Text>
                     <Text style={styles.orderItemText}>Address: <Text style={styles.orderItemValue}>{order.user.address}</Text></Text>
                     <Text style={styles.orderItemText}>Items Qty: <Text style={styles.orderItemValue}>{order.products.length}</Text></Text>

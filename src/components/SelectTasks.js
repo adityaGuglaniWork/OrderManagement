@@ -8,6 +8,10 @@ export default function SelectTasks({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.tasksContainer} onPress={() => { navigation.navigate("Invoices") }}>
+                <Text style={styles.tasks}>INVOICES</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.tasksContainer} onPress={() => { showTask(TASK_PACKING) }}>
                 <Text style={styles.tasks}>PACKING</Text>
             </TouchableOpacity>

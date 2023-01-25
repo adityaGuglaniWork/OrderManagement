@@ -49,6 +49,12 @@ export function useTaskManager() {
         return [task, order];
     }
 
+    const fetchOrderByInvoice = (invoiceId) => {
+        return orders.find((order) => {
+            return order.codes.IN_CODE === invoiceId;
+        });
+    }
+
     const doesTaskExist = (taskId, type) => {
         const tasks = (type === TASK_PACKING) ? packingTasks : deliveryTasks;
         return tasks.some((task) => task.taskId === taskId );
@@ -65,7 +71,8 @@ export function useTaskManager() {
         searchOrderHandler: searchOrderHandler,
         fetchDetailedTask: fetchDetailedTask,
         packingTaskCompleteHander: packingTaskCompleteHander,
-        doesTaskExist: doesTaskExist
+        doesTaskExist: doesTaskExist,
+        fetchOrderByInvoice: fetchOrderByInvoice
     }
 
     return [data, handlers];

@@ -104,8 +104,8 @@ function createTaxInfo() {
 }
 
 function generateCodes() {
-    const sampleCodes = [2341, 1242];
-    const index = Math.floor(Math.random() * 2);
+    const sampleCodes = [2341, 1242, 1425];
+    const index = Math.floor(Math.random() * 3);
     return {
         IN_CODE: "IN_CODE_" + sampleCodes[index],
         PCK_CODE: "PCK_" + sampleCodes[index],

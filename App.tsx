@@ -21,6 +21,8 @@ import { TASK_PACKING } from './constants';
 import PackingTask from './src/components/PackingTask';
 import DeliveryTask from './src/components/DeliveryTask';
 import ScanningQRScreen from './src/components/ScanningQRScreen';
+import Invoices from './src/components/Invoices';
+import InvoiceDetail from './src/components/InvoiceDetail';
 
 export const AuthContext = React.createContext("auth");
 
@@ -94,6 +96,12 @@ export default function App() {
             }} 
           </Stack.Screen>
           <Stack.Screen name="Scan" component={ScanningQRScreen} />
+          <Stack.Screen name="Invoices" component={Invoices} />
+          <Stack.Screen name="InvoiceDetail">
+            {({ route, navigation }) => {
+              return <InvoiceDetail id={route.params.id} navigation={navigation} />
+            }}
+          </Stack.Screen>
         </Stack.Navigator>
       </AuthContext.Provider>
     );

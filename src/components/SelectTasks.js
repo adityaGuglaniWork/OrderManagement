@@ -16,7 +16,7 @@ export default function SelectTasks({ navigation }) {
                 <Text style={styles.tasks}>DELIVERY</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.tasksContainer} onPress={() => { navigation.navigate("ScanningQRScreen") }}>
+            <TouchableOpacity style={styles.tasksContainer} onPress={() => { navigation.navigate("Scan") }}>
                 <Text style={styles.tasks}>SCAN QR</Text>
             </TouchableOpacity>
         </View>);

@@ -22,6 +22,7 @@ import PackingTask from './src/components/PackingTask';
 import DeliveryTask from './src/components/DeliveryTask';
 import { Header } from 'react-native/Libraries/NewAppScreen';
 import ScanningQRScreen from './src/components/ScanningQRScreen';
+import Scan from './src/components/Scan';
 
 export const AuthContext = React.createContext("auth");
 
@@ -96,6 +97,7 @@ export default function App() {
             }} 
           </Stack.Screen>
           <Stack.Screen name="ScanningQRScreen" component={ScanningQRScreen} />
+          <Stack.Screen name="Scan" component={Scan} />
         </Stack.Navigator>
       </AuthContext.Provider>
     );
